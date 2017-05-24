@@ -1,0 +1,31 @@
+#!/bin/bash
+
+home=~
+
+do_psyncer
+
+do_psyncer () {
+    check_if_is_creating
+    check_for_rsync
+    check_for_local_config_file
+}
+
+check_if_is_creating() {
+    if [ $1 -eq c ]; then
+        echo touch $home/.psyncer
+    fi
+}
+
+check_for_rsync() {
+    if ! which rsync > /dev/null 2>&1; then
+        echo You need the rsync utility installed in the system.
+        exit 1
+    fi
+}
+
+check_for_local_config_file () {
+    if [ ! -f $home/.psyncer ]; then
+        echo There\'s have any local configuration file. Use \'psyncer c\', so it creates the the base configuration file.
+        exit 1
+    fi
+}
