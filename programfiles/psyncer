@@ -1,21 +1,30 @@
 #!/bin/bash
 
+## Variables. Common values to be used throughout the program
 home=~
+config_file=.psyncer
 
-do_psyncer
 
+##
+# Triggers all the actions
+#
 do_psyncer () {
-    check_if_is_creating
     check_for_rsync
     check_for_local_config_file
 }
 
-check_if_is_creating() {
-    if [ $1 -eq c ]; then
-        echo touch $home/.psyncer
+##
+# The psyncer utility will work as a bundle of commands. So, the first argument is mandatory to make things works
+#
+check_for_first_argument() {
+    if [ -z $1 ]; then
+        echo You must provides the first argument to tell to the utility what you want to do.
     fi
 }
 
+##
+# Check for rsync program. It is a prerequisite. It not, quit.
+#
 check_for_rsync() {
     if ! which rsync > /dev/null 2>&1; then
         echo You need the rsync utility installed in the system.
@@ -24,8 +33,10 @@ check_for_rsync() {
 }
 
 check_for_local_config_file () {
-    if [ ! -f $home/.psyncer ]; then
-        echo There\'s have any local configuration file. Use \'psyncer c\', so it creates the the base configuration file.
+    if [ ! -f $home/$config_file ]; then
+        echo There\'s have any local configuration file.
         exit 1
     fi
 }
+
+do_psyncer
